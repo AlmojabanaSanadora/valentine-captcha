@@ -6,6 +6,7 @@
     <title>Verificación de Seguridad ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* --- ESTILOS GENERALES --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: linear-gradient(135deg, #fce3ec, #ffe8cc);
@@ -15,124 +16,257 @@
             align-items: center;
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
+            flex-direction: column;
         }
-        .main-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
-        
-        /* 1. Estilos del Captcha */
+        .hidden { display: none !important; }
+
+        /* --- PASO 1: CAPTCHA CHECKBOX --- */
         .captcha-box {
-            background: white;
-            padding: 15px;
+            background: #f9f9f9;
+            padding: 10px 15px;
             border: 1px solid #d3d3d3;
-            border-radius: 3px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             gap: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            cursor: pointer;
+            width: fit-content;
+            transition: all 0.3s;
         }
+        .checkbox-container { display: flex; align-items: center; gap: 10px; }
         .checkbox {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border: 2px solid #c1c1c1;
             border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            cursor: pointer;
+            background: white;
+            transition: 0.3s;
         }
+        .checkbox:hover { border-color: #b0b0b0; }
+        .captcha-label { font-family: 'Roboto', sans-serif; color: #333; font-size: 14px; }
+        .captcha-logo { display: flex; flex-direction: column; align-items: center; margin-left: 20px; }
+        .captcha-logo img { width: 30px; opacity: 0.7; }
+        .captcha-logo span { font-size: 9px; color: #999; text-align: center; margin-top: 2px; }
 
-        /* 2. Estilos de la Carta */
+        /* --- PASO 2: GRID DE FOTOS --- */
+        .captcha-modal {
+            background: white;
+            width: 350px; /* Tamaño tipo ventana real */
+            padding: 10px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border: 1px solid #ccc;
+            animation: fadeIn 0.4s;
+        }
+        .modal-header { background: #5a95f5; color: white; padding: 15px; margin: -10px -10px 10px -10px; }
+        .modal-header h3 { font-size: 12px; font-weight: normal; text-transform: uppercase; }
+        .modal-header h1 { font-size: 22px; font-weight: 700; margin: 5px 0; }
+        .modal-header p { font-size: 13px; }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+        }
+        .grid-item {
+            width: 100%;
+            height: 100px;
+            background-color: #eee;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s; }
+        .grid-item.selected img { transform: scale(0.9); }
+        .grid-item.selected { border: 3px solid #5a95f5; }
+        
+        /* Checkmark azul que aparece al seleccionar */
+        .check-icon {
+            position: absolute; top: 5px; left: 5px;
+            background: #5a95f5; color: white; border-radius: 50%;
+            width: 20px; height: 20px; font-size: 12px;
+            display: none; align-items: center; justify-content: center;
+            font-weight: bold; z-index: 10;
+        }
+        .grid-item.selected .check-icon { display: flex; }
+
+        .modal-footer {
+            margin-top: 10px; display: flex; justify-content: flex-end;
+            border-top: 1px solid #eee; padding-top: 10px;
+        }
+        .verify-btn {
+            background: #5a95f5; color: white; border: none; padding: 10px 20px;
+            font-weight: bold; border-radius: 3px; cursor: pointer; font-size: 14px;
+        }
+        .verify-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* --- PASO 3: CARTA FINAL (La tuya) --- */
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 30px;
             box-shadow: 0 20px 40px rgba(255, 182, 193, 0.4);
-            max-width: 400px;
-            width: 90%;
+            max-width: 400px; width: 90%;
             text-align: center;
-            display: none;
             animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
         .gif-container img { width: 100%; max-width: 200px; border-radius: 20px; margin-bottom: 20px; }
-        h1 { font-family: 'Dancing Script', cursive; color: #ff4d6d; font-size: 2.5em; margin-bottom: 20px; }
-        .btn-group { display: flex; justify-content: center; gap: 20px; position: relative; }
-        button { padding: 12px 30px; font-size: 18px; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
-        .yes-btn { background-color: #ff4d6d; color: white; }
-        .no-btn { background-color: #dedede; color: #333; }
-        .hidden { display: none !important; }
+        h1.title-fancy { font-family: 'Dancing Script', cursive; color: #ff4d6d; font-size: 2.5em; margin-bottom: 20px; }
+        
+        .btn-group { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .action-btn {
+            padding: 12px 30px; font-size: 18px; border: none; border-radius: 50px;
+            cursor: pointer; font-weight: 600; transition: all 0.3s ease; font-family: 'Poppins', sans-serif;
+        }
+        .yes-btn { background-color: #ff4d6d; color: white; box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3); }
+        .yes-btn:hover { transform: scale(1.1); }
+        .no-btn { background-color: #dedede; color: #333; position: relative; }
+
+        /* Confeti */
+        .confetti { position: fixed; width: 10px; height: 10px; top: -10vh; z-index: 9999; }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div id="step-captcha" class="captcha-box">
-            <div class="checkbox" id="checkbox-btn"></div>
-            <label style="font-family: 'Roboto', sans-serif; color: #555; cursor: pointer;">No soy un robot</label>
-            <div style="margin-left: 20px; text-align: center;">
-                <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" width="30" alt="reCAPTCHA">
-                <p style="font-size: 8px; color: #999;">reCAPTCHA<br>Privacidad - Condiciones</p>
+    <div id="step-1" class="captcha-box">
+        <div class="checkbox-container">
+            <div class="checkbox" id="checkbox-init"></div>
+            <label class="captcha-label" id="label-robot">No soy un robot</label>
+        </div>
+        <div class="captcha-logo">
+            <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="logo">
+            <span>reCAPTCHA</span>
+            <span style="font-size: 8px;">Privacidad - Condiciones</span>
+        </div>
+    </div>
+
+    <div id="step-2" class="captcha-modal hidden">
+        <div class="modal-header">
+            <h3>Selecciona todas las imágenes con</h3>
+            <h1>tu San Valentín</h1>
+            <p>Haz clic en verificar cuando termines.</p>
+        </div>
+        <div class="grid-container" id="grid-photos">
+            </div>
+        <div class="modal-footer">
+            <button id="verify-btn" class="verify-btn" disabled>VERIFICAR</button>
+        </div>
+    </div>
+
+    <div id="step-3" class="card hidden">
+        <div id="question-content">
+            <div class="gif-container">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmhrbmtqb3V2YmZ2aWJ5eWJqbm5oZnN5Y3h4aG5rOGZ6aHhua3VwMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="Ositos">
+            </div>
+            <h1 class="title-fancy">¿Quieres ser mi San Valentín?</h1>
+            <div class="btn-group">
+                <button class="action-btn yes-btn" id="yes-btn">¡Siii!</button>
+                <button class="action-btn no-btn" id="no-btn">No</button>
             </div>
         </div>
 
-        <div class="card" id="valentineCard">
-            <div id="questionSection">
-                <div class="gif-container">
-                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmhrbmtqb3V2YmZ2aWJ5eWJqbm5oZnN5Y3h4aG5rOGZ6aHhua3VwMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="Ositos">
-                </div>
-                <h1>¿Quieres ser mi San Valentín?</h1>
-                <div class="btn-group">
-                    <button class="yes-btn" id="yesBtn">¡Sí!</button>
-                    <button class="no-btn" id="noBtn">No</button>
-                </div>
+        <div id="success-content" class="hidden">
+            <div class="gif-container">
+                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2F4ZzBiNDZ4OGw3bWJmamh0YWhvc3N6NnFxYjdjcXRtZG5leTEycyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iSoqEfkTJN6JDgR48Y/giphy.gif" alt="Pingüino Amor">
             </div>
-
-            <div class="hidden" id="successSection">
-                <div class="gif-container">
-                    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2F4ZzBiNDZ4OGw3bWJmamh0YWhvc3N6NnFxYjdjcXRtZG5leTEycyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iSoqEfkTJN6JDgR48Y/giphy.gif" alt="Te amo">
-                </div>
-                <h1>¡Siii! ❤️ ¡Sabía que dirías que sí!</h1>
-            </div>
+            <h1 class="title-fancy">¡Sabía que dirías que SÍ! ❤️</h1>
+            <p style="color: #666;">Te amo mucho</p>
         </div>
     </div>
 
     <script>
-        const checkboxBtn = document.getElementById('step-captcha');
-        const checkVisual = document.getElementById('checkbox-btn');
-        const stepCaptcha = document.getElementById('step-captcha');
-        const valentineCard = document.getElementById('valentineCard');
-        const yesBtn = document.getElementById('yesBtn');
-        const noBtn = document.getElementById('noBtn');
-        const questionSection = document.getElementById('questionSection');
-        const successSection = document.getElementById('successSection');
+        // Referencias a elementos
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const checkboxInit = document.getElementById('checkbox-init');
+        const verifyBtn = document.getElementById('verify-btn');
+        const gridPhotos = document.getElementById('grid-photos');
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
 
-        checkboxBtn.addEventListener('click', () => {
-            checkVisual.style.backgroundColor = "#4caf50";
-            checkVisual.style.borderColor = "#4caf50";
-            checkVisual.innerHTML = "✓";
-            checkVisual.style.color = "white";
+        // Lógica del Checkbox Inicial
+        checkboxInit.addEventListener('click', () => {
+            // Animación simple de carga
+            checkboxInit.innerHTML = '<div style="width:100%;height:100%;background:#4caf50;"></div>';
+            document.getElementById('label-robot').innerText = "Cargando...";
+            
             setTimeout(() => {
-                stepCaptcha.classList.add('hidden');
-                valentineCard.style.display = 'block';
-            }, 600);
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
+                cargarFotos(); // Cargamos las fotos aquí
+            }, 800);
         });
 
-        const moveButton = () => {
+        // Lógica para cargar tus 9 fotos
+        function cargarFotos() {
+            gridPhotos.innerHTML = '';
+            // Generamos 9 casillas
+            for (let i = 1; i <= 9; i++) {
+                const div = document.createElement('div');
+                div.className = 'grid-item';
+                // IMPORTANTE: Aquí busca tus fotos en la carpeta assets
+                div.innerHTML = `
+                    <img src="assets/valentine-${i}.png" onerror="this.src='https://placehold.co/100x100?text=Foto${i}'">
+                    <div class="check-icon">✓</div>
+                `;
+                
+                // Evento click en cada foto
+                div.addEventListener('click', () => {
+                    div.classList.toggle('selected');
+                    // Verificar si hay alguna seleccionada para habilitar el botón
+                    const selected = document.querySelectorAll('.grid-item.selected').length;
+                    verifyBtn.disabled = selected === 0;
+                });
+                
+                gridPhotos.appendChild(div);
+            }
+        }
+
+        // Botón VERIFICAR -> Pasa a la Carta
+        verifyBtn.addEventListener('click', () => {
+            step2.classList.add('hidden');
+            step3.classList.remove('hidden');
+        });
+
+        // Botón NO que se escapa (Tu lógica original)
+        const moverBoton = () => {
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             noBtn.style.position = "fixed";
             noBtn.style.left = `${x}px`;
             noBtn.style.top = `${y}px`;
         };
+        noBtn.addEventListener("mouseover", moverBoton);
+        noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moverBoton(); });
 
-        noBtn.addEventListener("mouseover", moveButton);
-        noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveButton(); });
-
+        // Botón SÍ -> Éxito y Confeti
         yesBtn.addEventListener('click', () => {
-            questionSection.classList.add('hidden');
-            successSection.classList.remove('hidden');
+            document.getElementById('question-content').classList.add('hidden');
+            document.getElementById('success-content').classList.remove('hidden');
             noBtn.style.display = 'none';
+            lanzarConfeti();
         });
+
+        // Efecto Confeti (Rescatado de tu script.js)
+        function lanzarConfeti() {
+            const colors = ['#ff6b81', '#ff4757', '#ffffff', '#ffeb3b'];
+            for (let i = 0; i < 100; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                document.body.appendChild(conf);
+            }
+            // Estilos dinámicos para la caída
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }`;
+            document.head.appendChild(style);
+        }
     </script>
 </body>
 </html>
