@@ -99,7 +99,7 @@
         }
         .verify-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        /* --- PASO 3: CARTA FINAL (Modificada) --- */
+        /* --- PASO 3: CARTA FINAL --- */
         .card {
             background: rgba(255, 255, 255, 0.95);
             padding: 40px;
@@ -108,10 +108,9 @@
             max-width: 400px; width: 90%;
             text-align: center;
             animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            transition: all 0.5s ease; /* Transición suave para el cambio de tamaño */
+            transition: all 0.5s ease;
         }
 
-        /* CLASE PARA AGRANDAR EL CUADRO AL FINAL */
         .card.success-mode {
             max-width: 600px;
             padding: 50px 30px;
@@ -123,7 +122,6 @@
         .gif-container img { width: 100%; max-width: 200px; border-radius: 20px; margin-bottom: 20px; }
         h1.title-fancy { font-family: 'Dancing Script', cursive; color: #ff4d6d; font-size: 2.5em; margin-bottom: 20px; }
         
-        /* Estilos del mensaje final */
         .final-text { font-size: 1.2em; color: #444; line-height: 1.6; margin-top: 15px; }
         .highlight { color: #ff4d6d; font-weight: 700; font-size: 1.3em; display: block; margin-top: 10px; }
 
@@ -140,6 +138,10 @@
     </style>
 </head>
 <body>
+
+    <audio id="background-song" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="step-1" class="captcha-box">
         <div class="checkbox-container">
@@ -198,6 +200,7 @@
         const gridPhotos = document.getElementById('grid-photos');
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
+        const song = document.getElementById('background-song');
 
         checkboxInit.addEventListener('click', () => {
             checkboxInit.innerHTML = '<div style="width:100%;height:100%;background:#4caf50;"></div>';
@@ -229,6 +232,19 @@
         }
 
         verifyBtn.addEventListener('click', () => {
+            // INICIAR MÚSICA CON FADE IN
+            song.volume = 0;
+            song.play();
+            let vol = 0;
+            const fadeIn = setInterval(() => {
+                if (vol < 0.7) { // Volumen máximo deseado
+                    vol += 0.05;
+                    song.volume = vol;
+                } else {
+                    clearInterval(fadeIn);
+                }
+            }, 100);
+
             step2.classList.add('hidden');
             step3.classList.remove('hidden');
         });
@@ -247,7 +263,6 @@
             document.getElementById('question-content').classList.add('hidden');
             document.getElementById('success-content').classList.remove('hidden');
             noBtn.style.display = 'none';
-            // AGREGAMOS LA CLASE PARA AGRANDAR EL CUADRO
             cardContainer.classList.add('success-mode');
             lanzarConfeti();
         });
