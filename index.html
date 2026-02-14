@@ -203,6 +203,19 @@
         const song = document.getElementById('background-song');
 
         checkboxInit.addEventListener('click', () => {
+            // --- INICIAR MÚSICA AQUÍ (APENAS TOCA EL CHECKBOX) ---
+            song.volume = 0;
+            song.play().catch(e => console.log("Error al reproducir audio:", e));
+            let vol = 0;
+            const fadeIn = setInterval(() => {
+                if (vol < 0.7) { 
+                    vol += 0.05;
+                    song.volume = vol;
+                } else {
+                    clearInterval(fadeIn);
+                }
+            }, 100);
+
             checkboxInit.innerHTML = '<div style="width:100%;height:100%;background:#4caf50;"></div>';
             document.getElementById('label-robot').innerText = "Cargando...";
             
@@ -232,19 +245,6 @@
         }
 
         verifyBtn.addEventListener('click', () => {
-            // INICIAR MÚSICA CON FADE IN
-            song.volume = 0;
-            song.play();
-            let vol = 0;
-            const fadeIn = setInterval(() => {
-                if (vol < 0.7) { // Volumen máximo deseado
-                    vol += 0.05;
-                    song.volume = vol;
-                } else {
-                    clearInterval(fadeIn);
-                }
-            }, 100);
-
             step2.classList.add('hidden');
             step3.classList.remove('hidden');
         });
