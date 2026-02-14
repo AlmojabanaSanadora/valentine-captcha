@@ -6,9 +6,7 @@
     <title>Verificación de Seguridad ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* ESTILOS UNIFICADOS */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             background: linear-gradient(135deg, #fce3ec, #ffe8cc);
             min-height: 100vh;
@@ -18,10 +16,9 @@
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
         }
-
-        /* 1. Estilos del Captcha */
-        .main-container { display: flex; flex-direction: column; align-items: center; }
+        .main-container { display: flex; flex-direction: column; align-items: center; width: 100%; }
         
+        /* 1. Estilos del Captcha */
         .captcha-box {
             background: white;
             padding: 15px;
@@ -31,18 +28,20 @@
             align-items: center;
             gap: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
         }
-
         .checkbox {
             width: 28px;
             height: 28px;
             border: 2px solid #c1c1c1;
             border-radius: 2px;
-            cursor: pointer;
-            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
 
-        /* 2. Estilos de la Carta (Segundo archivo) */
+        /* 2. Estilos de la Carta */
         .card {
             background: rgba(255, 255, 255, 0.9);
             padding: 40px;
@@ -51,42 +50,25 @@
             max-width: 400px;
             width: 90%;
             text-align: center;
-            display: none; /* Se oculta hasta que pase el captcha */
+            display: none;
             animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
-
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .gif-container img { width: 100%; max-width: 200px; border-radius: 20px; margin-bottom: 20px; }
-        h1 { font-family: 'Dancing Script', cursive; color: #ff4d6d; font-size: 2.8em; margin-bottom: 25px; }
-        
+        h1 { font-family: 'Dancing Script', cursive; color: #ff4d6d; font-size: 2.5em; margin-bottom: 20px; }
         .btn-group { display: flex; justify-content: center; gap: 20px; position: relative; }
-        button {
-            padding: 12px 35px;
-            font-size: 18px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .yes-btn { background-color: #ff4d6d; color: white; box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3); }
-        .no-btn { background-color: #dedede; color: #333; position: relative; }
-
+        button { padding: 12px 30px; font-size: 18px; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
+        .yes-btn { background-color: #ff4d6d; color: white; }
+        .no-btn { background-color: #dedede; color: #333; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        
         <div id="step-captcha" class="captcha-box">
             <div class="checkbox" id="checkbox-btn"></div>
-            <label style="font-family: 'Roboto', sans-serif; color: #555;">No soy un robot</label>
+            <label style="font-family: 'Roboto', sans-serif; color: #555; cursor: pointer;">No soy un robot</label>
             <div style="margin-left: 20px; text-align: center;">
                 <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" width="30" alt="reCAPTCHA">
                 <p style="font-size: 8px; color: #999;">reCAPTCHA<br>Privacidad - Condiciones</p>
@@ -112,11 +94,11 @@
                 <h1>¡Siii! ❤️ ¡Sabía que dirías que sí!</h1>
             </div>
         </div>
-
     </div>
 
     <script>
-        const checkboxBtn = document.getElementById('checkbox-btn');
+        const checkboxBtn = document.getElementById('step-captcha');
+        const checkVisual = document.getElementById('checkbox-btn');
         const stepCaptcha = document.getElementById('step-captcha');
         const valentineCard = document.getElementById('valentineCard');
         const yesBtn = document.getElementById('yesBtn');
@@ -124,43 +106,32 @@
         const questionSection = document.getElementById('questionSection');
         const successSection = document.getElementById('successSection');
 
-        // Lógica del Captcha: Al marcar el cuadro, pasamos a la carta
         checkboxBtn.addEventListener('click', () => {
-            checkboxBtn.style.backgroundColor = "#4caf50";
-            checkboxBtn.style.borderColor = "#4caf50";
-            checkboxBtn.innerHTML = "✓";
-            checkboxBtn.style.color = "white";
-            checkboxBtn.style.textAlign = "center";
-            checkboxBtn.style.lineHeight = "24px";
-
+            checkVisual.style.backgroundColor = "#4caf50";
+            checkVisual.style.borderColor = "#4caf50";
+            checkVisual.innerHTML = "✓";
+            checkVisual.style.color = "white";
             setTimeout(() => {
                 stepCaptcha.classList.add('hidden');
                 valentineCard.style.display = 'block';
             }, 600);
         });
 
-        // Lógica del botón "No" que se mueve (Vibe coding puro)
         const moveButton = () => {
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            
             noBtn.style.position = "fixed";
             noBtn.style.left = `${x}px`;
             noBtn.style.top = `${y}px`;
         };
 
-        // Soporte para PC y Celular
         noBtn.addEventListener("mouseover", moveButton);
-        noBtn.addEventListener("touchstart", (e) => {
-            e.preventDefault(); // Evita que el clic se dispare en celular
-            moveButton();
-        });
+        noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveButton(); });
 
-        // Al hacer clic en SÍ
         yesBtn.addEventListener('click', () => {
             questionSection.classList.add('hidden');
             successSection.classList.remove('hidden');
-            noBtn.classList.add('hidden'); // Eliminamos el botón NO
+            noBtn.style.display = 'none';
         });
     </script>
 </body>
